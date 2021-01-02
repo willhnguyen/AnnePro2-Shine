@@ -202,7 +202,7 @@ inline void handleKeypress(msg_t msg) {
   uint8_t col = msg & 0b1111;
   keypress_handler handler = profiles[currentProfile].keypressCallback;
   if (handler != NULL) {
-    handler(ledColors, row, col, ledIntensity);
+    handler(ledColors, row, col, ledIntensity, profiles[currentProfile].colorPalette, profiles[currentProfile].colorPaletteLength);
   }
 }
 
@@ -249,7 +249,7 @@ void executeProfile(bool init) {
   if (init && profiles[currentProfile].profileInit != NULL) {
     profiles[currentProfile].profileInit(ledColors);
   }
-  profiles[currentProfile].callback(ledColors, ledIntensity);
+  profiles[currentProfile].callback(ledColors, ledIntensity, profiles[currentProfile].colorPalette, profiles[currentProfile].colorPaletteLength);
 }
 
 /*
@@ -334,7 +334,7 @@ void animationCallback(GPTDriver *_driver) {
   // overrides the foreground
   if (!is_foregroundColor_set &&
       profiles[currentProfile].animationSpeed[currentSpeed] > 0) {
-    profiles[currentProfile].callback(ledColors, ledIntensity);
+    profiles[currentProfile].callback(ledColors, ledIntensity, profiles[currentProfile].colorPalette, profiles[currentProfile].colorPaletteLength);
   }
 }
 
@@ -434,7 +434,7 @@ int main(void) {
   halInit();
   chSysInit();
 
-  profiles[currentProfile].callback(ledColors, ledIntensity);
+  profiles[currentProfile].callback(ledColors, ledIntensity, profiles[currentProfile].colorPalette, profiles[currentProfile].colorPaletteLength);
   updateAnimationSpeed();
 
   // Setup masks to all be 0xFF at the start

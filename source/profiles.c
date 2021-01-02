@@ -10,24 +10,24 @@ static const uint32_t colorPalette[] = {0x9c0000, 0x9c9900, 0x1f9c00, 0x00979c,
 
 #define LEN(a) (sizeof(a) / sizeof(*a))
 
-void red(led_t *currentKeyLedColors, uint8_t intensity) {
+void red(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   setAllKeysColor(currentKeyLedColors, 0xFF0000, intensity);
 }
 
-void green(led_t *currentKeyLedColors, uint8_t intensity) {
+void green(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   setAllKeysColor(currentKeyLedColors, 0x00FF00, intensity);
 }
 
-void blue(led_t *currentKeyLedColors, uint8_t intensity) {
+void blue(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   setAllKeysColor(currentKeyLedColors, 0x0000FF, intensity);
 }
 
-void miamiNights(led_t *currentKeyLedColors, uint8_t intensity) {
+void miamiNights(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   setAllKeysColor(currentKeyLedColors, 0x00979c, intensity);
   setModKeysColor(currentKeyLedColors, 0x9c008f, intensity);
 }
 
-void rainbowHorizontal(led_t *currentKeyLedColors, uint8_t intensity) {
+void rainbowHorizontal(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (uint16_t i = 0; i < NUM_ROW; ++i) {
     for (uint16_t j = 0; j < NUM_COLUMN; ++j) {
       setKeyColor(&currentKeyLedColors[i * NUM_COLUMN + j],
@@ -36,7 +36,7 @@ void rainbowHorizontal(led_t *currentKeyLedColors, uint8_t intensity) {
   }
 }
 
-void rainbowVertical(led_t *currentKeyLedColors, uint8_t intensity) {
+void rainbowVertical(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (uint16_t i = 0; i < NUM_COLUMN; ++i) {
     for (uint16_t j = 0; j < NUM_ROW; ++j) {
       setKeyColor(&currentKeyLedColors[j * NUM_COLUMN + i],
@@ -46,7 +46,7 @@ void rainbowVertical(led_t *currentKeyLedColors, uint8_t intensity) {
 }
 
 static uint8_t colAnimOffset = 0;
-void animatedRainbowVertical(led_t *currentKeyLedColors, uint8_t intensity) {
+void animatedRainbowVertical(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (uint16_t i = 0; i < NUM_COLUMN; ++i) {
     for (uint16_t j = 0; j < NUM_ROW; ++j) {
       setKeyColor(&currentKeyLedColors[j * NUM_COLUMN + i],
@@ -59,7 +59,7 @@ void animatedRainbowVertical(led_t *currentKeyLedColors, uint8_t intensity) {
 
 static uint8_t flowValue[NUM_COLUMN] = {0,  11, 22, 33,  44,  55,  66,
                                         77, 88, 99, 110, 121, 132, 143};
-void animatedRainbowFlow(led_t *currentKeyLedColors, uint8_t intensity) {
+void animatedRainbowFlow(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (int i = 0; i < NUM_COLUMN; i++) {
     setColumnColorHSV(currentKeyLedColors, i, flowValue[i], 255, 125,
                       intensity);
@@ -72,7 +72,7 @@ void animatedRainbowFlow(led_t *currentKeyLedColors, uint8_t intensity) {
 
 static uint8_t waterfallValue[NUM_COLUMN] = {0,  10, 20, 30,  40,  50,  60,
                                              70, 80, 90, 100, 110, 120, 130};
-void animatedRainbowWaterfall(led_t *currentKeyLedColors, uint8_t intensity) {
+void animatedRainbowWaterfall(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (int i = 0; i < NUM_ROW; i++) {
     setRowColorHSV(currentKeyLedColors, i, waterfallValue[i], 255, 125,
                    intensity);
@@ -85,7 +85,7 @@ void animatedRainbowWaterfall(led_t *currentKeyLedColors, uint8_t intensity) {
 
 static uint8_t breathingValue = 180;
 static int breathingDirection = -1;
-void animatedBreathing(led_t *currentKeyLedColors, uint8_t intensity) {
+void animatedBreathing(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   setAllKeysColorHSV(currentKeyLedColors, 85, 255, breathingValue, intensity);
   if (breathingValue >= 180) {
     breathingDirection = -3;
@@ -97,7 +97,7 @@ void animatedBreathing(led_t *currentKeyLedColors, uint8_t intensity) {
 
 static uint8_t spectrumValue = 2;
 static int spectrumDirection = 1;
-void animatedSpectrum(led_t *currentKeyLedColors, uint8_t intensity) {
+void animatedSpectrum(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   setAllKeysColorHSV(currentKeyLedColors, spectrumValue, 255, 125, intensity);
   if (spectrumValue >= 177) {
     spectrumDirection = -3;
@@ -111,7 +111,7 @@ static uint8_t waveValue[NUM_COLUMN] = {0,  0,  0,  10,  15,  20,  25,
                                         40, 55, 75, 100, 115, 135, 140};
 static int waveDirection[NUM_COLUMN] = {3, 3, 3, 3, 3, 3, 3,
                                         3, 3, 3, 3, 3, 3, 3};
-void animatedWave(led_t *currentKeyLedColors, uint8_t intensity) {
+void animatedWave(led_t *currentKeyLedColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (int i = 0; i < NUM_COLUMN; i++) {
     if (waveValue[i] >= 140) {
       waveDirection[i] = -3;
@@ -126,7 +126,7 @@ void animatedWave(led_t *currentKeyLedColors, uint8_t intensity) {
 
 uint8_t animatedPressedFadeBuf[NUM_ROW * NUM_COLUMN] = {0};
 
-void reactiveFade(led_t *ledColors, uint8_t intensity) {
+void reactiveFade(led_t *ledColors, uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   for (int i = 0; i < NUM_ROW * NUM_COLUMN; i++) {
     if (animatedPressedFadeBuf[i] > 5) {
       animatedPressedFadeBuf[i] -= 5;
@@ -145,7 +145,7 @@ void reactiveFade(led_t *ledColors, uint8_t intensity) {
 }
 
 void reactiveFadeKeypress(led_t *ledColors, uint8_t row, uint8_t col,
-                          uint8_t intensity) {
+                          uint8_t intensity, const uint32_t *colorPalette, const uint32_t colorPaletteLength) {
   int i = row * NUM_COLUMN + col;
   animatedPressedFadeBuf[i] = 100;
   ledColors[i].green = 0;
@@ -156,4 +156,9 @@ void reactiveFadeKeypress(led_t *ledColors, uint8_t row, uint8_t col,
 void reactiveFadeInit(led_t *ledColors) {
   memset(animatedPressedFadeBuf, 0, sizeof(animatedPressedFadeBuf));
   memset(ledColors, 0, NUM_ROW * NUM_COLUMN * 3);
+}
+
+
+void resetColAnimOffset(led_t *currentKeyLedColors) {
+  colAnimOffset = 0;
 }
